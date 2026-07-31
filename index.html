@@ -566,6 +566,8 @@ $("applyForm").addEventListener("submit",e=>{
   $("formErr").classList.remove("show");
   const btn=$("submitBtn"); btn.disabled=true; btn.textContent="שולחת...";
   const body=new URLSearchParams(); Object.entries(data).forEach(([k,v])=>body.append(k,v));
+  // הטופס רב-עמודי (6 עמודים): חובה לשלוח fvv+pageHistory אחרת גוגל שומר תשובה ריקה
+  body.append("fvv","1"); body.append("pageHistory","0,1,2,3,4,5");
   fetch(FORM_ACTION,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body.toString()})
     .then(()=>show("thanks")).catch(()=>show("thanks"));
 });
