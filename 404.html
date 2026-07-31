@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>איזור הגאונות שלך — אמא משקיעה</title>
+<meta http-equiv="refresh" content="0; url=https://adinahirr-commits.github.io/genius-quiz/">
+<script>
+  // תופס לינקים שנשברו (למשל תו כיווניות נסתר שנדבק בהודעת עברית) ומחזיר לשאלון
+  (function(){
+    var base = "https://adinahirr-commits.github.io/genius-quiz/";
+    var hash = (location.hash || "");
+    // מנקה תווי כיווניות נסתרים מה-hash אם נדבקו
+    hash = hash.replace(/[‎‏‪-‮⁦-⁩]/g, "");
+    location.replace(base + hash);
+  })();
+</script>
+<style>
+  body{font-family:system-ui,Arial,sans-serif;background:#FBFAF7;color:#191A2E;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;text-align:center;padding:24px}
+  a{color:#EF55A5;font-weight:800}
+</style>
+</head>
+<body>
+  <div>
+    <p style="font-size:1.2rem;font-weight:700">רגע, מעבירה אותך לשאלון... 💛</p>
+    <p><a href="https://adinahirr-commits.github.io/genius-quiz/">אם לא עברת אוטומטית, לחצי כאן</a></p>
+  </div>
+</body>
+</html>
