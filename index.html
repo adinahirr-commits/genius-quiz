@@ -99,10 +99,11 @@
   .streams li{display:flex;gap:12px;align-items:flex-start;font-size:1.06rem}
   .streams li::before{content:"◆";color:var(--lime);font-size:.8rem;margin-top:7px;flex-shrink:0}
 
-  .cta{margin-top:36px;background:var(--ink);color:#fff;border-radius:26px;padding:clamp(28px,5vw,44px);text-align:center;box-shadow:var(--shadow-lg)}
-  .cta h2{color:#fff}
-  .cta p{color:#D9D9E4;margin-top:14px;max-width:52ch;margin-inline:auto;font-size:1.08rem}
+  .cta{margin-top:36px;background:linear-gradient(135deg,#EF55A5 0%,#FF86C4 55%,#FFB0D6 100%);color:var(--ink);border-radius:26px;padding:clamp(28px,5vw,44px);text-align:center;box-shadow:0 24px 60px -22px rgba(239,85,165,.6)}
+  .cta h2{color:var(--ink)}
+  .cta p{color:var(--ink);margin-top:14px;max-width:52ch;margin-inline:auto;font-size:1.08rem}
   .cta .btn{margin-top:26px}
+  .cta .btn.dark{background:var(--ink);color:#fff}
   .restart{margin-top:26px;text-align:center}
 
   /* pilot */
@@ -223,7 +224,7 @@
     <div class="cta">
       <h2>גילית מי את! 🎉</h2>
       <p>זה הצעד הראשון והמרגש לפני שאנחנו מתחילות לבנות עוד מקור הכנסה שמגיע מתוך המתנות שכבר יש לך. בפיילוט של אמא מכניסה אנחנו בונות יחד, צעד אחר צעד, ערוץ הכנסה נוסף שמבוסס על איזור הגאונות שלך, במקביל למה שאת כבר עושה היום.</p>
-      <button class="btn" id="toPilot" style="background:var(--pink)">ספרי לי על הפיילוט ←</button>
+      <button class="btn dark" id="toPilot">ספרי לי על הפיילוט ←</button>
     </div>
     <div class="restart"><button class="btn ghost" id="restartBtn">לענות שוב מההתחלה</button></div>
   </section>
@@ -392,7 +393,7 @@ const FORM_FIELDS = [
 /* ===== open (transparent-gift) questions ===== */
 const OPEN_Q = [
   { key:"gift_natural", title:"עכשיו רגע מהלב 💛", prompt:"מה בא לך כל כך בקלות, שאת מופתעת שלאחרים זה דווקא קשה? כתבי מה שעולה, בלי לחשוב יותר מדי.", ph:"משהו שתמיד בא לי בטבעיות..." },
-  { key:"gift_earned", title:"ועוד דבר אחד, וסיימנו 💛", prompt:"על מה אנשים הכי מבקשים ממך עזרה? או משהו שהיה קשה לך פעם, ועברת אותו, והיום הוא כבר קל לך?", ph:"אנשים תמיד מבקשים ממני... / עברתי..." },
+  { key:"gift_earned", title:"ועוד דבר אחד, וסיימנו 💛", prompt:"באיזה תחום היית הכי רוצה לעזור לאחרים?<br><span style=\"font-size:.95rem;opacity:.8\">אולי זה התחום המקצועי שלך. אולי משהו שהיה קשה לך פעם, ועברת אותו, והיום הוא כבר קל לך ובא לך לקצר בו את הדרך גם לאחרים. אולי משהו שזיהית שחסר בעולם, ואת מרגישה שאם רק היה אותו החיים היו פשוטים יותר.</span>", ph:"התחום שהכי בא לי לעזור בו הוא..." },
 ];
 function esc(s){return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 
@@ -458,7 +459,7 @@ function buildReflection(){
   const b=(openAns.gift_earned||"").trim();
   const parts=[];
   if(a) parts.push(`מה שבא לך בטבעיות: <b>"${esc(a)}"</b>.`);
-  if(b) parts.push(`ומה שאנשים מבקשים ממך: <b>"${esc(b)}"</b>.`);
+  if(b) parts.push(`והתחום שבא לך לעזור בו: <b>"${esc(b)}"</b>.`);
   if(!parts.length) return "";
   return parts.join(" ")+" זאת בדיוק המתנה השקופה שלך. מה שנשמע לך מובן מאליו, לאחרים זה קסם שמשלמים עליו. וזאת נקודת הפתיחה של מקור ההכנסה הבא שלך.";
 }
