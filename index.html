@@ -89,6 +89,9 @@
   .r-block.gift-b .lbl{color:var(--pink)}
   .r-block.blend-b{background:var(--lime)}
   .r-block.blend-b .lbl{color:var(--ink)}
+  .r-block.mine-b{background:var(--pink-soft)}
+  .r-block.mine-b .lbl{color:var(--pink)}
+  .r-block.mine-b p b{color:var(--ink);font-weight:800}
   .r-block.zone-b{background:var(--vista);border:none}
   .r-block.zone-b .lbl{color:var(--ink)}
   .r-block.zone-b p{color:var(--ink);font-weight:500}
@@ -201,8 +204,12 @@
       <div class="lbl">השילוב הייחודי שלך</div>
       <p id="rBlend"></p>
     </div>
-    <div class="r-block gift-b">
+    <div class="r-block mine-b" id="mineBlock" style="display:none">
       <div class="lbl">המתנה השקופה שלך</div>
+      <p id="rMine"></p>
+    </div>
+    <div class="r-block gift-b">
+      <div class="lbl" id="giftLbl">המתנה השקופה שלך</div>
       <p id="rGift"></p>
     </div>
     <div class="r-block zone-b">
@@ -382,11 +389,18 @@ const FORM_FIELDS = [
   {e:"752544577", label:"אני מאשרת קבלת הודעות ודיוור מ׳אמא משקיעה׳ (ניתן להסיר בכל עת)", type:"consent", req:true, consentVal:"מאשר/ת"},
 ];
 
+/* ===== open (transparent-gift) questions ===== */
+const OPEN_Q = [
+  { key:"gift_natural", title:"עכשיו רגע מהלב 💛", prompt:"מה בא לך כל כך בקלות, שאת מופתעת שלאחרים זה דווקא קשה? כתבי מה שעולה, בלי לחשוב יותר מדי.", ph:"משהו שתמיד בא לי בטבעיות..." },
+  { key:"gift_earned", title:"ועוד דבר אחד, וסיימנו 💛", prompt:"על מה אנשים הכי מבקשים ממך עזרה? או משהו שהיה קשה לך פעם, ועברת אותו, והיום הוא כבר קל לך?", ph:"אנשים תמיד מבקשים ממני... / עברתי..." },
+];
+function esc(s){return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
 /* ===== state ===== */
-const TOTAL = QUESTIONS.length + 1; // +1 open-heart
-let step = 0; // 0..QUESTIONS.length (last = heart)
+const TOTAL = QUESTIONS.length + OPEN_Q.length;
+let step = 0;
 const answers = new Array(QUESTIONS.length).fill(null);
-let heartText = "";
+const openAns = { gift_natural:"", gift_earned:"" };
 let genius = {primary:null, blend:null, label:""};
 const scores = {A:0,T:0,M:0,E:0};
 
@@ -408,13 +422,19 @@ function renderStep(){
     body.innerHTML = html;
     body.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>choose(b.dataset.k)));
   } else {
-    body.innerHTML = `<h2 class="q-text">עכשיו רגע מהלב 💛</h2>
-      <p style="margin-bottom:20px;color:var(--ink-soft);font-size:1.1rem">מה החלום, הרעיון או הדבר שהכי בא לך להפוך למקור הכנסה? כתבי מה שעולה — בלי לחשוב יותר מדי. (זה גם ייכנס אוטומטית לטופס בהמשך)</p>
-      <textarea id="heartInput" placeholder="כותבת מהלב...">${heartText.replace(/"/g,'&quot;')}</textarea>
-      <button class="btn" id="heartNext" style="margin-top:22px">לגלות את האבחון שלי ✨</button>`;
-    const ta = $("heartInput");
-    ta.addEventListener("input",()=>{heartText = ta.value;});
-    $("heartNext").addEventListener("click",()=>{ heartText = ta.value.trim(); finish(); });
+    const oi = step - QUESTIONS.length;
+    const oq = OPEN_Q[oi];
+    const last = oi === OPEN_Q.length-1;
+    body.innerHTML = `<h2 class="q-text">${oq.title}</h2>
+      <p style="margin-bottom:20px;color:var(--ink-soft);font-size:1.1rem">${oq.prompt}</p>
+      <textarea id="openInput" placeholder="${oq.ph}">${esc(openAns[oq.key])}</textarea>
+      <button class="btn" id="openNext" style="margin-top:22px">${last?"לגלות את האבחון שלי ✨":"הבא ←"}</button>`;
+    const ta = $("openInput");
+    ta.addEventListener("input",()=>{ openAns[oq.key] = ta.value; });
+    $("openNext").addEventListener("click",()=>{
+      openAns[oq.key] = ta.value.trim();
+      if(last) finish(); else { step++; renderStep(); }
+    });
     ta.focus();
   }
 }
@@ -433,6 +453,16 @@ function finish(){
   show("result");
 }
 
+function buildReflection(){
+  const a=(openAns.gift_natural||"").trim();
+  const b=(openAns.gift_earned||"").trim();
+  const parts=[];
+  if(a) parts.push(`מה שבא לך בטבעיות: <b>"${esc(a)}"</b>.`);
+  if(b) parts.push(`ומה שאנשים מבקשים ממך: <b>"${esc(b)}"</b>.`);
+  if(!parts.length) return "";
+  return parts.join(" ")+" זאת בדיוק המתנה השקופה שלך. מה שנשמע לך מובן מאליו, לאחרים זה קסם שמשלמים עליו. וזאת נקודת הפתיחה של מקור ההכנסה הבא שלך.";
+}
+
 function renderResult(best,second,isBlend){
   const a=ARCH[best];
   $("rEmoji").textContent = isBlend ? a.emoji+ARCH[second].emoji : a.emoji;
@@ -445,6 +475,9 @@ function renderResult(best,second,isBlend){
     $("blendBlock").style.display="block";
     $("rBlend").textContent = BLEND[bk] || "יש בך שילוב של שני צבעים חזקים — וזה בדיוק מה שהופך אותך לאחת ויחידה.";
   } else { $("blendBlock").style.display="none"; }
+  const refl = buildReflection();
+  if(refl){ $("mineBlock").style.display="block"; $("rMine").innerHTML=refl; $("giftLbl").textContent="למה המתנה שלך שווה כסף"; }
+  else { $("mineBlock").style.display="none"; $("giftLbl").textContent="המתנה השקופה שלך"; }
   $("rGift").textContent=a.gift;
   $("rZone").textContent=a.zone;
   const ul=$("rStreams"); ul.innerHTML="";
@@ -461,7 +494,7 @@ function renderForm(){
     const hint = f.hint?` <span class="hint">— ${f.hint}</span>`:'';
     let control="";
     if(f.type==="para"){
-      let val=""; if(f.fromHeart) val=heartText;
+      let val=""; if(f.fromHeart) val=openAns.gift_earned;
       control=`<textarea data-e="${f.e}">${val.replace(/</g,'&lt;')}</textarea>`;
     } else if(f.type==="radio"){
       control=`<div class="radios" data-e="${f.e}">`+f.opts.map(o=>`<label class="radio-opt"><input type="radio" name="r_${f.e}" value="${o}"><span>${o}</span></label>`).join("")+`</div>`;
@@ -506,7 +539,11 @@ function collectAndValidate(){
     else if(f.type==="consent"){ const c=wrap.querySelector("input[type=checkbox]"); val=c.checked?c.dataset.val:""; }
     else { val=wrap.querySelector("input").value.trim(); }
     // auto-inject genius into the "משהו נוסף" field
-    if(f.fromGenius){ const g=`איזור הגאונות שלי (מהשאלון): ${genius.label}`; val = val? (g+"\n"+val) : g; }
+    if(f.fromGenius){
+      let g=`איזור הגאונות שלי (מהשאלון): ${genius.label}`;
+      if(openAns.gift_natural) g+=`\nמה שבא לי בקלות: ${openAns.gift_natural}`;
+      val = val? (g+"\n"+val) : g;
+    }
     if(f.req && !val){ ok=false; const e=wrap.querySelector(".err"); if(e)e.classList.add("show"); if(!firstBad)firstBad=wrap; }
     if(val) data["entry."+f.e]=val;
   });
@@ -528,7 +565,7 @@ $("applyForm").addEventListener("submit",e=>{
 $("startBtn").addEventListener("click",()=>{step=0;renderStep();show("quiz");});
 $("backBtn").addEventListener("click",()=>{if(step>0){step--;renderStep();}});
 $("toPilot").addEventListener("click",()=>{renderForm();show("pilot");});
-$("restartBtn").addEventListener("click",()=>{step=0;answers.fill(null);heartText="";show("intro");});
+$("restartBtn").addEventListener("click",()=>{step=0;answers.fill(null);openAns.gift_natural="";openAns.gift_earned="";show("intro");});
 $("restartBtn2").addEventListener("click",()=>show("result"));
 </script>
 </body>
