@@ -29,6 +29,12 @@
   .blob.b2{width:300px;height:300px;background:var(--pink-soft);bottom:-110px;left:-90px}
   .blob.b3{width:220px;height:220px;background:#EEF3C4;top:40%;left:-120px;opacity:.4}
 
+  .compass-hero{width:120px;margin:0 auto 22px;filter:drop-shadow(0 16px 24px rgba(239,85,165,.3));animation:floaty 4.6s ease-in-out infinite;transform-origin:center}
+  .compass-hero svg{width:100%;height:auto;display:block;overflow:visible}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-9px) rotate(1.5deg)}}
+  @keyframes spin-slow{to{transform:rotate(360deg)}}
+  .badge-star{width:15px;height:15px;vertical-align:-2px;margin-inline-end:4px}
+  @media (prefers-reduced-motion:reduce){.compass-hero{animation:none}}
   .eyebrow{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);font-weight:800;margin-bottom:18px}
   h1{font-size:clamp(2rem,7vw,3.8rem);font-weight:900;letter-spacing:-.02em;line-height:1.05}
   h2{font-size:clamp(1.6rem,5vw,2.6rem);font-weight:800;letter-spacing:-.02em;line-height:1.12}
@@ -174,6 +180,7 @@
 
   <!-- INTRO -->
   <section class="screen active" id="intro" aria-label="פתיחה">
+    <div class="compass-hero"><svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="200" cy="200" r="168" fill="none" stroke="#191A2E" stroke-width="7"/><line x1="200.0" y1="32.0" x2="200.0" y2="49.0" stroke="#191A2E" stroke-width="6" stroke-linecap="round"/><line x1="318.8" y1="81.2" x2="311.7" y2="88.3" stroke="#191A2E" stroke-width="6" stroke-linecap="round"/><line x1="368.0" y1="200.0" x2="351.0" y2="200.0" stroke="#191A2E" stroke-width="6" stroke-linecap="round"/><line x1="318.8" y1="318.8" x2="311.7" y2="311.7" stroke="#191A2E" stroke-width="6" stroke-linecap="round"/><line x1="200.0" y1="368.0" x2="200.0" y2="351.0" stroke="#191A2E" stroke-width="6" stroke-linecap="round"/><line x1="81.2" y1="318.8" x2="88.3" y2="311.7" stroke="#191A2E" stroke-width="6" stroke-linecap="round"/><line x1="32.0" y1="200.0" x2="49.0" y2="200.0" stroke="#191A2E" stroke-width="6" stroke-linecap="round"/><line x1="81.2" y1="81.2" x2="88.3" y2="88.3" stroke="#191A2E" stroke-width="6" stroke-linecap="round"/><path d="M 206.00 116.00 L 227.21 184.79 L 296.00 206.00 L 227.21 227.21 L 206.00 296.00 L 184.79 227.21 L 116.00 206.00 L 184.79 184.79 Z" fill="#FCE1EF"/><path d="M 200.00 110.00 L 221.21 178.79 L 290.00 200.00 L 221.21 221.21 L 200.00 290.00 L 178.79 221.21 L 110.00 200.00 L 178.79 178.79 Z" fill="#EF55A5"/><circle cx="200" cy="200" r="16" fill="#191A2E"/></svg></div>
     <p class="eyebrow">אמא משקיעה · יצירת מקור הכנסה נוסף</p>
     <h1>מה איזור הגאונות<br>שלך?</h1>
     <p class="lead">לכל אחת יש <b>מתנה שקופה</b> — הדבר שבא לך בטבעיות, שאת אפילו לא רואה בו ערך כי הוא כל כך קל לך. אבל בדיוק שם, בצומת שבין מה שאת אוהבת, מה שאת טובה בו, ומה שאנשים מוכנים לשלם עליו — נמצא מקור ההכנסה הבא שלך.</p>
@@ -197,7 +204,7 @@
 
   <!-- RESULT -->
   <section class="screen" id="result" aria-label="התוצאה שלך">
-    <div class="r-badge">איזור הגאונות שלך</div>
+    <div class="r-badge"><svg class="badge-star" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M 50 4 L 60.61 39.39 L 96 50 L 60.61 60.61 L 50 96 L 39.39 60.61 L 4 50 L 39.39 39.39 Z" fill="#EF55A5"/></svg>איזור הגאונות שלך</div>
     <div class="r-emoji" id="rEmoji"></div>
     <div class="r-name" id="rName"></div>
     <p class="r-essence" id="rEssence"></p>
