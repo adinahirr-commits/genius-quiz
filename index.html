@@ -509,7 +509,7 @@ function renderForm(){
       control=`<input type="text" ${auto} data-e="${f.e}">`;
     }
     let genNote="";
-    if(f.fromGenius) genNote=`<div class="autochip">🧭 איזור הגאונות שלך: <span class="v" id="geniusChip"></span></div>`;
+    if(f.fromGenius && genius.label) genNote=`<div class="autochip">🧭 איזור הגאונות שלך: <span class="v" id="geniusChip"></span></div>`;
     wrap.innerHTML=`<label>${f.label}${reqStar}${hint}</label>${genNote}${control}<div class="err">שדה חובה — נשמח שתמלאי 💛</div>`;
     box.appendChild(wrap); wireField(wrap);
   });
@@ -540,9 +540,10 @@ function collectAndValidate(){
     else { val=wrap.querySelector("input").value.trim(); }
     // auto-inject genius into the "משהו נוסף" field
     if(f.fromGenius){
-      let g=`איזור הגאונות שלי (מהשאלון): ${genius.label}`;
-      if(openAns.gift_natural) g+=`\nמה שבא לי בקלות: ${openAns.gift_natural}`;
-      val = val? (g+"\n"+val) : g;
+      let g="";
+      if(genius.label) g=`איזור הגאונות שלי (מהשאלון): ${genius.label}`;
+      if(openAns.gift_natural) g+=(g?"\n":"")+`מה שבא לי בקלות: ${openAns.gift_natural}`;
+      if(g) val = val? (g+"\n"+val) : g;
     }
     if(f.req && !val){ ok=false; const e=wrap.querySelector(".err"); if(e)e.classList.add("show"); if(!firstBad)firstBad=wrap; }
     if(val) data["entry."+f.e]=val;
@@ -567,6 +568,14 @@ $("backBtn").addEventListener("click",()=>{if(step>0){step--;renderStep();}});
 $("toPilot").addEventListener("click",()=>{renderForm();show("pilot");});
 $("restartBtn").addEventListener("click",()=>{step=0;answers.fill(null);openAns.gift_natural="";openAns.gift_earned="";show("intro");});
 $("restartBtn2").addEventListener("click",()=>show("result"));
+
+/* direct access to the fit-check form via #apply */
+function routeHash(){
+  const h=(location.hash||"").toLowerCase();
+  if(h==="#apply"||h==="#pilot"||h==="#form"){ renderForm(); show("pilot"); }
+}
+window.addEventListener("hashchange",routeHash);
+routeHash();
 </script>
 </body>
 </html>
