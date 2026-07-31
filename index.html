@@ -114,6 +114,13 @@
   .story p{font-size:1.08rem;color:var(--ink)}
   .story p+p{margin-top:14px}
 
+  .tcards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+  .tcard{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow)}
+  .tcard p{font-size:1.02rem;color:var(--ink)}
+  .tname{display:flex;align-items:center;gap:10px;font-weight:800;margin-bottom:12px;font-size:1.08rem}
+  .tav{width:38px;height:38px;border-radius:50%;background:var(--pink);color:var(--ink);display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0}
+  .tresult{color:var(--pink)}
+
   /* form */
   .fsec{margin-top:34px}
   .fsec-title{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--pink);margin-bottom:6px}
@@ -152,6 +159,7 @@
     .gift{padding:22px 20px}
     .btn{padding:15px 28px;font-size:1.05rem}
     .r-emoji{font-size:3.2rem}
+    .tcards{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -217,7 +225,7 @@
   <section class="screen" id="pilot" aria-label="הפיילוט">
     <span class="pill-date">המחזור הבא מתחיל ב־11.8 🗓️</span>
     <h2>יצירת מקור הכנסה נוסף — הפיילוט</h2>
-    <p class="lead">10 שבועות שבהם את לוקחת את איזור הגאונות שגילית עכשיו, והופכת אותו למקור הכנסה אמיתי. לא עוד קורס עם המון תיאוריה — בנייה אמיתית, יחד, עם קהל אמיתי ותוצאות אמיתיות.</p>
+    <p class="lead">12 שבועות שבהם את לוקחת את איזור הגאונות שגילית עכשיו, והופכת אותו למקור הכנסה אמיתי. לא עוד קורס עם המון תיאוריה — בנייה אמיתית, יחד, עם קהל אמיתי ותוצאות אמיתיות.</p>
 
     <div class="story">
       <div class="lbl">איך זה עבד אצלי</div>
@@ -232,6 +240,21 @@
       <div class="stage"><div class="num">2</div><div><h3>מחקר קהל היעד</h3><p>מבינות מי הקהל שלך, ומה הכאבים, החלומות והחסמים שלו. אמיתי — שאלונים וראיונות, לא ניחוש.</p></div></div>
       <div class="stage"><div class="num">3</div><div><h3>בונות את הדרך הכי מהירה מ־A ל־B</h3><p>מחברות את הגאונות שלך לקהל לכדי תהליך אחד — ה־Signature System שלך. המוצר, הליווי או הסדנה שלך.</p></div></div>
       <div class="stage"><div class="num">4</div><div><h3>יוצאות לשוק (Lean Startup)</h3><p>משיקות עם קהל אמיתי, מקבלות פידבק וכסף אמיתי, ומדייקות בלי סיכון. מצליחות בוודאות — כי בונות עם השוק, לא רק בשבילו.</p></div></div>
+    </div>
+
+    <div style="margin-top:40px">
+      <h3 style="font-size:1.5rem;text-align:center">זה עובד. ולא רק לי 💛</h3>
+      <p class="muted" style="text-align:center;margin-top:10px;max-width:54ch;margin-inline:auto">בשנה וחצי האחרונות ליוויתי נשים בתחומים שונים לגמרי: הורות, ליווי אחרי לידה, סדר בבית, תזונה, ייעוץ משכנתא ועוד. כולן הגיעו בלי מוצר, בלי קהל מוגדר, ובלי ניסיון במכירות.</p>
+      <div class="tcards">
+        <div class="tcard">
+          <div class="tname"><span class="tav">נ</span> נועה</div>
+          <p>בנתה תכנית ליווי למאפרות ומעצבות שיער שרוצות פרסונל ברנד באינסטגרם. תוך 3 שבועות גייסה 10 לקוחות ב־2,500 ₪ כל אחת. <b class="tresult">25,000 ₪ ראשונים</b> מהדבר שהיא כבר ידעה לעשות. היום מריצה מחזור שלישי.</p>
+        </div>
+        <div class="tcard">
+          <div class="tname"><span class="tav">ר</span> רוני</div>
+          <p>בנתה תכנית ליווי לנשים שרוצות בית נקי ומסודר. תוך שבועיים גייסה 3 לקוחות ב־7,000 ₪ כל אחת, ובמקביל מוצר קטן ב־297 ₪ שנמכר ל־100+ לקוחות. <b class="tresult">מעל 30,000 ₪</b> בחודשיים הראשונים.</p>
+        </div>
+      </div>
     </div>
 
     <div style="background:#fff;border:1px solid var(--line);border-radius:24px;padding:clamp(24px,4vw,36px);margin-top:36px;box-shadow:var(--shadow)">
