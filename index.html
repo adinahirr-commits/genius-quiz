@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>איזור הגאונות שלך — אמא משקיעה</title>
+<meta name="description" content="שאלון קצר שמגלה מה איזור הגאונות שלך והמתנה השקופה שממנה תוכלי לבנות מקור הכנסה נוסף.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#FBFAF7; --ink:#191A2E; --ink-soft:#6B6B7B;
+    --pink:#EF55A5; --lime:#CCD537; --vista:#8C9EFF; --sky:#BEE0F2;
+    --pink-soft:#FCE1EF; --line:#ECE7DF;
+    --shadow:0 18px 40px -28px rgba(25,26,46,.22);
+    --shadow-lg:0 30px 70px -40px rgba(25,26,46,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Heebo',system-ui,sans-serif;background:var(--canvas);color:var(--ink);
+    line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:clamp(28px,6vw,64px) clamp(20px,5vw,40px);position:relative;z-index:2}
+
+  .blob{position:fixed;border-radius:50%;filter:blur(46px);opacity:.5;z-index:0;pointer-events:none}
+  .blob.b1{width:340px;height:340px;background:var(--sky);top:-120px;right:-90px}
+  .blob.b2{width:300px;height:300px;background:var(--pink-soft);bottom:-110px;left:-90px}
+  .blob.b3{width:220px;height:220px;background:#EEF3C4;top:40%;left:-120px;opacity:.4}
+
+  .eyebrow{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);font-weight:800;margin-bottom:18px}
+  h1{font-size:clamp(2rem,7vw,3.8rem);font-weight:900;letter-spacing:-.02em;line-height:1.05}
+  h2{font-size:clamp(1.6rem,5vw,2.6rem);font-weight:800;letter-spacing:-.02em;line-height:1.12}
+  h3{font-size:1.2rem;font-weight:800}
+  p.lead{font-size:clamp(1.05rem,2.4vw,1.22rem);color:var(--ink);margin-top:22px;max-width:60ch}
+  .muted{color:var(--ink-soft)}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;justify-content:center;
+    background:var(--pink);color:var(--ink);font-family:inherit;font-weight:800;font-size:1.1rem;
+    border:none;border-radius:100px;padding:16px 40px;cursor:pointer;text-decoration:none;
+    transition:transform .15s ease,box-shadow .15s ease,filter .15s ease;box-shadow:var(--shadow);
+  }
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.03);box-shadow:var(--shadow-lg)}
+  .btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+  .btn.dark{background:var(--ink);color:#fff}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink);box-shadow:none;font-size:.98rem;padding:12px 26px}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+
+  .screen{display:none;animation:fade .5s ease}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .gift{margin-top:34px;background:#fff;border:1px solid var(--line);border-radius:24px;padding:clamp(24px,4vw,36px);box-shadow:var(--shadow)}
+  .gift h3{margin-bottom:8px}
+  .gift p{color:var(--ink-soft)}
+  .gift .quote{border-inline-start:4px solid var(--lime);padding-inline-start:16px;margin-top:18px;font-weight:500;color:var(--ink)}
+
+  .prog-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+  .prog-count{font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;white-space:nowrap}
+  .prog-bar{height:8px;background:var(--pink-soft);border-radius:100px;overflow:hidden;flex:1;margin-inline-start:20px}
+  .prog-fill{height:100%;width:0;background:var(--pink);border-radius:100px;transition:width .4s ease}
+
+  .q-text{font-size:clamp(1.4rem,4vw,2rem);font-weight:800;letter-spacing:-.01em;line-height:1.25;margin-bottom:28px}
+
+  .options{display:flex;flex-direction:column;gap:14px}
+  .opt{display:flex;align-items:center;gap:16px;width:100%;text-align:start;background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:18px 22px;font-family:inherit;font-size:1.08rem;font-weight:500;color:var(--ink);cursor:pointer;transition:border-color .15s,transform .12s,box-shadow .15s}
+  .opt:hover{border-color:var(--pink);transform:translateX(-3px);box-shadow:var(--shadow)}
+  .opt:focus-visible{outline:3px solid var(--vista);outline-offset:2px}
+  .opt .dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--pink);flex-shrink:0;transition:background .15s}
+  .opt:hover .dot,.opt.sel .dot{background:var(--pink)}
+  .back{margin-top:24px;background:none;border:none;color:var(--ink-soft);font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+  .back:disabled{opacity:0;pointer-events:none}
+
+  textarea,input,select{font-family:inherit;font-size:1.05rem;color:var(--ink);width:100%;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;transition:border-color .15s}
+  textarea:focus,input:focus,select:focus{outline:none;border-color:var(--pink)}
+  textarea{min-height:120px;resize:vertical;line-height:1.6}
+
+  /* result */
+  .r-badge{display:inline-flex;align-items:center;gap:10px;background:var(--pink-soft);color:var(--ink);font-weight:800;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 18px;border-radius:100px;margin-bottom:20px}
+  .r-emoji{font-size:clamp(3.4rem,12vw,5.2rem);line-height:1;margin-bottom:6px}
+  .r-name{font-size:clamp(2.2rem,7.5vw,3.6rem);font-weight:900;letter-spacing:-.02em;line-height:1.04}
+  .r-essence{font-size:clamp(1.15rem,3vw,1.45rem);font-weight:500;color:var(--ink-soft);margin-top:14px;max-width:56ch}
+  .r-block{background:#fff;border:1px solid var(--line);border-radius:22px;padding:clamp(22px,4vw,34px);margin-top:22px;box-shadow:var(--shadow)}
+  .r-block .lbl{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;margin-bottom:12px}
+  .r-block p{font-size:1.08rem;color:var(--ink)}
+  .r-block.gift-b .lbl{color:var(--pink)}
+  .r-block.blend-b{background:var(--lime)}
+  .r-block.blend-b .lbl{color:var(--ink)}
+  .r-block.zone-b{background:var(--vista);border:none}
+  .r-block.zone-b .lbl{color:var(--ink)}
+  .r-block.zone-b p{color:var(--ink);font-weight:500}
+  .streams{list-style:none;display:flex;flex-direction:column;gap:12px;margin-top:6px}
+  .streams li{display:flex;gap:12px;align-items:flex-start;font-size:1.06rem}
+  .streams li::before{content:"◆";color:var(--lime);font-size:.8rem;margin-top:7px;flex-shrink:0}
+
+  .cta{margin-top:36px;background:var(--ink);color:#fff;border-radius:26px;padding:clamp(28px,5vw,44px);text-align:center;box-shadow:var(--shadow-lg)}
+  .cta h2{color:#fff}
+  .cta p{color:#D9D9E4;margin-top:14px;max-width:52ch;margin-inline:auto;font-size:1.08rem}
+  .cta .btn{margin-top:26px}
+  .restart{margin-top:26px;text-align:center}
+
+  /* pilot */
+  .pill-date{display:inline-block;background:var(--lime);color:var(--ink);font-weight:800;padding:6px 16px;border-radius:100px;font-size:.9rem;margin-bottom:18px}
+  .stages{display:flex;flex-direction:column;gap:16px;margin-top:28px}
+  .stage{display:flex;gap:18px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px 24px;box-shadow:var(--shadow)}
+  .stage .num{width:44px;height:44px;flex-shrink:0;border-radius:50%;background:var(--pink);color:var(--ink);font-weight:900;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .stage h3{margin-bottom:4px}
+  .stage p{color:var(--ink-soft);font-size:1rem}
+  .story{margin-top:28px;background:var(--sky);border-radius:22px;padding:clamp(24px,4vw,34px)}
+  .story .lbl{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;margin-bottom:12px}
+  .story p{font-size:1.08rem;color:var(--ink)}
+  .story p+p{margin-top:14px}
+
+  /* form */
+  .fsec{margin-top:34px}
+  .fsec-title{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--pink);margin-bottom:6px}
+  .field{margin-top:20px}
+  .field label{display:block;font-weight:700;margin-bottom:8px;font-size:1.02rem}
+  .field .req{color:var(--pink)}
+  .field .hint{font-weight:400;color:var(--ink-soft);font-size:.92rem}
+  .radios{display:flex;flex-direction:column;gap:10px}
+  .radio-opt{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:12px 16px;cursor:pointer;font-weight:500;transition:border-color .15s}
+  .radio-opt:hover{border-color:var(--pink)}
+  .radio-opt input{width:auto}
+  .radio-opt.sel{border-color:var(--pink);background:var(--pink-soft)}
+  .scale{display:grid;grid-template-columns:repeat(10,1fr);gap:8px}
+  .scale button{height:46px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-family:inherit;font-weight:800;font-size:1rem;cursor:pointer;color:var(--ink);transition:all .12s}
+  .scale button:hover{border-color:var(--pink)}
+  .scale button.sel{background:var(--pink);border-color:var(--pink);color:var(--ink)}
+  .autochip{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;background:var(--pink-soft);border-radius:14px;padding:14px 18px;margin-top:6px;font-weight:600}
+  .autochip .v{color:var(--pink);font-weight:800}
+  .consent{display:flex;gap:12px;align-items:flex-start;margin-top:8px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer}
+  .consent input{width:auto;margin-top:5px}
+  .err{color:#C0334F;font-weight:600;font-size:.92rem;margin-top:6px;display:none}
+  .err.show{display:block}
+  .form-err{background:#FDE7EC;color:#C0334F;border-radius:14px;padding:14px 18px;margin-top:20px;font-weight:600;display:none}
+  .form-err.show{display:block}
+
+  footer{text-align:center;color:var(--ink-soft);font-size:.85rem;padding:40px 20px 30px}
+  @media(max-width:520px){
+    .wrap{padding:26px 18px 40px}
+    .opt{font-size:1rem;padding:15px 16px;gap:12px}
+    .q-text{font-size:1.35rem}
+    .stage{padding:16px 18px;gap:14px}
+    .stage .num{width:38px;height:38px;font-size:1.1rem}
+    .scale{grid-template-columns:repeat(5,1fr)}
+    .scale button{height:44px}
+    .cta,.story,.r-block{padding:22px 20px}
+    .gift{padding:22px 20px}
+    .btn{padding:15px 28px;font-size:1.05rem}
+    .r-emoji{font-size:3.2rem}
+  }
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+<main class="wrap">
+
+  <!-- INTRO -->
+  <section class="screen active" id="intro" aria-label="פתיחה">
+    <p class="eyebrow">אמא משקיעה · יצירת מקור הכנסה נוסף</p>
+    <h1>מה איזור הגאונות<br>שלך?</h1>
+    <p class="lead">לכל אחת יש <b>מתנה שקופה</b> — הדבר שבא לך בטבעיות, שאת אפילו לא רואה בו ערך כי הוא כל כך קל לך. אבל בדיוק שם, בצומת שבין מה שאת אוהבת, מה שאת טובה בו, ומה שאנשים מוכנים לשלם עליו — נמצא מקור ההכנסה הבא שלך.</p>
+    <div class="gift">
+      <h3>3 דקות. אבחון אחד. הצעד הראשון שלך.</h3>
+      <p>בסוף תגלי מי מבין ארבעת הטיפוסים את — אמנית, מורה, מנהלת או יזמית — ואיך המתנה שלך הופכת למקור הכנסה אמיתי.</p>
+      <p class="quote">"אל תשאפי להיות אישה מצליחה. תשאפי להיות אישה בעלת ערך." אנשים משלמים על ערך — על מעבר מנקודה A לנקודה B. השאלון הזה מראה לך את הערך שכבר יש בך.</p>
+    </div>
+    <div style="margin-top:32px"><button class="btn" id="startBtn">יאללה, בואי נגלה ✨</button></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="quiz" aria-label="שאלון">
+    <div class="prog-top">
+      <span class="prog-count"><span id="qNow">1</span> / <span id="qTotal">10</span></span>
+      <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+    </div>
+    <div id="quizBody"></div>
+    <button class="back" id="backBtn" disabled>→ חזרה לשאלה הקודמת</button>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="result" aria-label="התוצאה שלך">
+    <div class="r-badge">איזור הגאונות שלך</div>
+    <div class="r-emoji" id="rEmoji"></div>
+    <div class="r-name" id="rName"></div>
+    <p class="r-essence" id="rEssence"></p>
+    <div class="r-block blend-b" id="blendBlock" style="display:none">
+      <div class="lbl">השילוב הייחודי שלך</div>
+      <p id="rBlend"></p>
+    </div>
+    <div class="r-block gift-b">
+      <div class="lbl">המתנה השקופה שלך</div>
+      <p id="rGift"></p>
+    </div>
+    <div class="r-block zone-b">
+      <div class="lbl">הצומת שלך</div>
+      <p id="rZone"></p>
+    </div>
+    <div class="r-block">
+      <div class="lbl">איך זה נראה כמקור הכנסה נוסף</div>
+      <ul class="streams" id="rStreams"></ul>
+    </div>
+    <div class="cta">
+      <h2>עכשיו — לבנות את זה יחד 🚀</h2>
+      <p>גילית מי את. אבל אבחון לבד לא בונה מקור הכנסה. בפיילוט "יצירת מקור הכנסה נוסף" אנחנו בונות יחד, צעד אחר צעד, ערוץ הכנסה נוסף — במקביל למה שאת כבר עושה היום.</p>
+      <button class="btn" id="toPilot" style="background:var(--pink)">ספרי לי על הפיילוט ←</button>
+    </div>
+    <div class="restart"><button class="btn ghost" id="restartBtn">לענות שוב מההתחלה</button></div>
+  </section>
+
+  <!-- PILOT + FORM -->
+  <section class="screen" id="pilot" aria-label="הפיילוט">
+    <span class="pill-date">המחזור הבא מתחיל ב־11.8 🗓️</span>
+    <h2>יצירת מקור הכנסה נוסף — הפיילוט</h2>
+    <p class="lead">10 שבועות שבהם את לוקחת את איזור הגאונות שגילית עכשיו, והופכת אותו למקור הכנסה אמיתי. לא עוד קורס עם המון תיאוריה — בנייה אמיתית, יחד, עם קהל אמיתי ותוצאות אמיתיות.</p>
+
+    <div class="story">
+      <div class="lbl">איך זה עבד אצלי</div>
+      <p>10 שנים הגעתי פיזית לכל כלה, עם הידיים שלי, שעה מול שעה. חלמתי על משהו שלא תלוי רק בזמן שלי — הכנסה שאני יכולה לייצר מכל מקום, שנותנת ערך אמיתי לאנשים.</p>
+      <p>באוקטובר 2024 בניתי לראשונה את "אמא משקיעה" — <b>בלי שום תוכנית עסקית, עם 3 סטורי בלבד</b> — ומהמחזור הראשון הרווחתי <b>75,000 ₪</b>. פשוט כי פעלתי בדיוק לפי העקרונות שאנחנו עוברות יחד בפיילוט.</p>
+      <p>ובקבוצה כבר יש נשים בדיוק כמוך — מאפרות, יועצות, אמהות בחופשת לידה, בעלות מקצוע — שכל אחת גילתה את המתנה השקופה שלה והתחילה לבנות ממנה. <b>את כל זה אנחנו עושות יחד, מתחילות ב־11.8.</b></p>
+    </div>
+
+    <h3 style="margin-top:36px;font-size:1.4rem">איך זה עובד — 4 שלבים</h3>
+    <div class="stages">
+      <div class="stage"><div class="num">1</div><div><h3>בוחרות את התחום שלך</h3><p>המקצוע שלך, או תחום שהיית רוצה לעזור בו לאחרים — מחובר ישירות לאיזור הגאונות שגילית עכשיו.</p></div></div>
+      <div class="stage"><div class="num">2</div><div><h3>מחקר קהל היעד</h3><p>מבינות מי הקהל שלך, ומה הכאבים, החלומות והחסמים שלו. אמיתי — שאלונים וראיונות, לא ניחוש.</p></div></div>
+      <div class="stage"><div class="num">3</div><div><h3>בונות את הדרך הכי מהירה מ־A ל־B</h3><p>מחברות את הגאונות שלך לקהל לכדי תהליך אחד — ה־Signature System שלך. המוצר, הליווי או הסדנה שלך.</p></div></div>
+      <div class="stage"><div class="num">4</div><div><h3>יוצאות לשוק (Lean Startup)</h3><p>משיקות עם קהל אמיתי, מקבלות פידבק וכסף אמיתי, ומדייקות בלי סיכון. מצליחות בוודאות — כי בונות עם השוק, לא רק בשבילו.</p></div></div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--line);border-radius:24px;padding:clamp(24px,4vw,36px);margin-top:36px;box-shadow:var(--shadow)">
+      <h2 style="font-size:1.7rem">רוצה לבדוק אם זה הצעד הנכון עבורך?</h2>
+      <p class="muted" style="margin-top:10px">מלאי את השאלון האישי הקצר — הוא יעזור לנו (וגם לך) להבין אם הפיילוט מתאים לך עכשיו, ונחזור אלייך עם כל המידע. <b>איזור הגאונות שלך מהשאלון כבר נכנס אוטומטית 👇</b></p>
+
+      <form id="applyForm" novalidate>
+        <div id="formFields"></div>
+        <div class="form-err" id="formErr">רגע — יש עוד כמה שדות חובה שצריך למלא (מסומנים באדום).</div>
+        <button type="submit" class="btn" id="submitBtn" style="margin-top:28px;width:100%">שליחת הפרטים ←</button>
+        <p class="muted" style="font-size:.82rem;text-align:center;margin-top:14px">הפרטים נשמרים אצל אמא משקיעה בלבד, לצורך יצירת קשר לגבי הפיילוט. ניתן להסיר מהדיוור בכל עת.</p>
+      </form>
+    </div>
+
+    <div class="story" style="background:var(--pink-soft);text-align:center;margin-top:32px">
+      <h3 style="font-size:1.35rem">עוד לא בטוחה שזה הרגע?</h3>
+      <p style="margin-top:8px">הצטרפי לקבוצת הווטסאפ החינמית של אמא משקיעה — אמהות שצומחות יחד כדי לייצר עוד ערוצי הכנסה שבונים חופש 💛</p>
+      <a class="btn" style="background:#25D366;color:#fff;margin-top:20px" href="https://chat.whatsapp.com/KUN5iiyUs5s8DMLS1QBsQI?mode=gi_t" target="_blank" rel="noopener">לקבוצת הווטסאפ החינמית ←</a>
+    </div>
+
+    <div class="restart"><button class="btn ghost" id="restartBtn2">חזרה לתוצאה</button></div>
+  </section>
+
+  <!-- THANKS -->
+  <section class="screen" id="thanks" aria-label="תודה">
+    <div style="text-align:center;padding:40px 0">
+      <div style="font-size:4rem">💛</div>
+      <h1 style="margin-top:10px">קיבלנו! תודה</h1>
+      <p class="lead" style="margin-inline:auto">הפרטים שלך אצלנו. נחזור אלייך עם כל המידע על הפיילוט שמתחיל ב־11.8. עד אז — כבר גילית את איזור הגאונות שלך, וזה הצעד הכי חשוב. נדבר בקרוב 🚀</p>
+      <p class="muted" style="margin-top:20px">באהבה, עדי</p>
+    </div>
+  </section>
+
+  <footer>אמא משקיעה · הדרך מתבהרת להולכים בה 💛</footer>
+</main>
+
+<script>
+/* ===== Archetypes: A=אמנית T=מורה M=מנהלת E=יזמית ===== */
+const QUESTIONS = [
+  { q:"חברה מתקשרת בלחץ וצריכה עזרה. מה הכי טבעי לך לעשות בשבילה?",
+    o:[["A","לעזור לה לספר את הסיפור שלה בצורה שנוגעת"],["T","לשבת איתה ולהסביר צעד-צעד עד שהכל מתבהר"],["M","לפתוח רשימה ולפרק לה את הבלאגן למשימות"],["E","להראות לה את ההזדמנות ולדחוף אותה לפעול"]] },
+  { q:"הדבר שבא לך בקלות מטורפת — ואת מופתעת שלאחרים הוא קשה:",
+    o:[["A","להמציא, לדמיין, לתת לדברים צורה יפה"],["T","להסביר משהו מסובך בצורה שכל אחד מבין"],["M","לקחת כאוס ולהפוך אותו לסדר ומערכת"],["E","לזהות הזדמנות ולדעת מה המהלך הבא"]] },
+  { q:"אנשים סביבך פונים אלייך הכי הרבה כשהם צריכים...",
+    o:[["A","השראה, רעיון מקורי, מבט אחר"],["T","שמישהו יסביר וילמד אותם"],["M","שמישהו יעשה סדר בבלאגן שלהם"],["E","דחיפה, חיבור, מישהו שיזיז אותם קדימה"]] },
+  { q:"באיזה רגע את הכי \"נדלקת\" ומאבדת תחושת זמן?",
+    o:[["A","כשאני יוצרת משהו יש מאין"],["T","כשאני רואה את האור נדלק אצל מישהו שהבין"],["M","כשהכל מסתדר למקומו ויש סדר מושלם"],["E","כשאני סוגרת מהלך ורואה תוצאה קורית"]] },
+  { q:"על מה הכי טבעי לך שישלמו לך?",
+    o:[["A","שאני גורמת לאנשים להרגיש משהו"],["T","שאני מלמדת ומקצרת להם את הדרך"],["M","שאני עושה להם סדר בבלאגן"],["E","שאני מובילה אותם קדימה לתוצאה"]] },
+  { q:"חברות היו מתארות אותך בעיקר כ...",
+    o:[["A","היצירתית, זו עם הדמיון"],["T","הסבלנית, זו שמסבירה הכי טוב"],["M","המאורגנת, זו עם הרשימות"],["E","זו עם הביטחון, שיודעת לסחוף"]] },
+  { q:"מול פרויקט חדש — איזה חלק הכי כיף לך?",
+    o:[["A","לדמיין איך זה יראה וירגיש"],["T","להבין לעומק ואז להעביר הלאה"],["M","לתכנן, לפרק לשלבים ולבנות מסלול"],["E","פשוט להתחיל, לזוז, ולגלות תוך כדי"]] },
+  { q:"מה את עושה בלי לשים לב — גם כשאף אחד לא ביקש?",
+    o:[["A","מייפה, משדרגת ונותנת צורה לדברים סביבי"],["T","מסבירה ומלמדת מישהו משהו חדש"],["M","מסדרת ומארגנת מרחב, מידע או תהליך"],["E","מזהה הזדמנות ומחברת בין אנשים"]] },
+  { q:"מקור ההכנסה שהכי מתחשק לך לבנות מרגיש כמו...",
+    o:[["A","משהו שאני יוצרת ושמבטא אותי"],["T","משהו שמלמד ומעביר לאחרים מה שאני יודעת"],["M","משהו שנותן לאחרים סדר או פתרון מעשי"],["E","משהו שאני מובילה, בונה ומגדילה"]] },
+];
+
+const ARCH = {
+  A:{ emoji:"🎨", name:"אמנית",
+      essence:"את יוצרת. את רואה יופי ומקוריות איפה שאחרים רואים דף ריק, ויודעת לגרום לאנשים להרגיש.",
+      gift:"היכולת שלך ליצור משהו יש מאין ולתת לו צורה שנוגעת — נראית לך מובנת מאליה, אבל לרוב האנשים זה קסם. מה שנשפך ממך בטבעיות, אחרים היו משלמים כדי לקבל.",
+      zone:"בצומת שבין מה שאת אוהבת ליצור, לבין עולם שצמא לתוכן ומותגים שמעוררים רגש — שם הזהב שלך. הערך שלך הוא לגרום לאנשים להרגיש, ועל זה משלמים.",
+      streams:["תוכן, סטוריטלינג ומיתוג אישי שמושכים קהל","מוצרים דיגיטליים יצירתיים — הדפסים, תבניות, אמנות","עיצוב חוויות, אירועים או מותגים לעסקים","כתיבה, מוזיקה או יצירה שהופכת למוצר שנמכר שוב ושוב"] },
+  T:{ emoji:"📚", name:"מורה",
+      essence:"את לוקחת דברים מורכבים והופכת אותם לפשוטים. את חיה לרגע שבו האור נדלק אצל מישהו שהבין.",
+      gift:"מה שברור לך מאליו — לאחרים זה ערפל. היכולת שלך לפרק ידע ולקצר דרך היא בדיוק מה שאנשים מחפשים: לא עוד מידע, אלא מישהי שתעביר אותם את התהליך בלי ההצפה.",
+      zone:"בצומת שבין מה שאת יודעת לעומק, לבין אנשים שנתקעים בדיוק שם — שם המתנה שלך הופכת למקור הכנסה. אנשים לא משלמים על ידע (הוא חינם), הם משלמים על מישהי שתקצר להם את הדרך.",
+      streams:["קורס דיגיטלי או סדרת הדרכות בתחום שלך","סדנאות, וובינרים או ליווי קבוצתי","מדריכים, ספרים דיגיטליים ותבניות \"עשי-זאת-בעצמך\"","ליווי אישי שלוקח אנשים מנקודה A ל-B"] },
+  M:{ emoji:"🗂️", name:"מנהלת",
+      essence:"את רואה סדר איפה שאחרים רואים כאוס. את לוקחת בלאגן ובונה ממנו מסלול, מערכת ושקט.",
+      gift:"הסדר שבא לך בטבעיות מרגיש לך מובן מאליו — אבל למי שטובע בעומס, זו הצלה. היכולת לפרק פרויקט לגורמים ולבנות מערכת היא נכס ששווה זהב לכל עסק.",
+      zone:"בצומת שבין הצורך שלך בסדר, לבין עולם של אנשים ועסקים שקורסים תחת הבלאגן — שם המתנה שלך הופכת למקור הכנסה. את מוכרת את השקט של \"הכל מסודר ומטופל\".",
+      streams:["ניהול תפעול, פרויקטים או תהליכים לעסקים","בניית מערכות, אוטומציות ותבניות מוכנות למכירה","שירותי סדר וארגון (דיגיטלי, מסמכים, בית)","מוצרי \"מערכת מוכנה\" — פלאנרים, גיליונות, מסלולים"] },
+  E:{ emoji:"🚀", name:"יזמית",
+      essence:"את רואה הזדמנות איפה שאחרים רואים סוף. את מובילה, סוחפת, ומזיזה דברים קדימה.",
+      gift:"החלטות מהבטן, חיבורים בין אנשים, והיכולת פשוט להתחיל ולגלות תוך כדי — באים לך בטבעיות. אנשים משלמים כדי להיות ליד מישהי כזאת, ובטח כדי שתובילי אותם.",
+      zone:"בצומת שבין החזון והמנוע שבתוכך, לבין אנשים שצריכים מישהי שתזיז אותם — שם המתנה שלך הופכת למקור הכנסה. הערך שלך הוא ההובלה עצמה, ועל זה משלמים הכי הרבה.",
+      streams:["בניית עסק, מותג או קהילה סביב רעיון שלך","שיווק, מכירות ושיתופי פעולה","ליווי עסקי או מנטורינג ליזמיות מתחילות","חיבור בין אנשים והזדמנויות כמקצוע"] },
+};
+const BLEND = {
+  "AT":"את יוצרת — וגם יודעת ללמד. הכוח שלך הוא להפוך רעיון מקורי לתוכן שמעביר לאחרים. שילוב נדיר של יצירה והנחלה.",
+  "AM":"יש בך גם את הניצוץ היצירתי וגם את היד המסדרת. את חולמת בגדול ויודעת גם להוציא לפועל בצורה מסודרת — נדיר שיש את שניהם באותה אישה.",
+  "AE":"יצירתיות ועם מנוע יזמי. את לא רק יוצרת יפה — את יודעת גם להפוך את זה לעסק. זה בדיוק השילוב שבונה מותגים.",
+  "TM":"את יודעת גם ללמד וגם לבנות מערכת — כלומר לקחת ידע ולסדר אותו לתהליך ברור שאנשים יכולים לעקוב אחריו. מדריכה מלידה.",
+  "TE":"את יודעת ללמד וגם להוביל. לא רק להעביר ידע — אלא לבנות סביבו תנועה, קהילה ועסק. מורה שהיא גם מנהיגה.",
+  "EM":"סדר ועם חזון. את רואה הזדמנות וגם יודעת בדיוק איך לבנות אותה שלב-שלב. זה שילוב של מנכ\"לית.",
+};
+const ORDER = ["E","M","T","A"];
+
+/* ===== Google Form ===== */
+const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSeDjThenUV9r0X30rP2hhCcUvC4tDjionufG5LWIv-FRi13JA/formResponse";
+const FORM_FIELDS = [
+  {sec:"קצת עלייך"},
+  {e:"358071810", label:"שם מלא", type:"text", req:true},
+  {e:"940450579", label:"טלפון", type:"tel", req:true, hint:"לכאן נחזור אלייך עם הפרטים על הפיילוט"},
+  {e:"803156503", label:"מייל", type:"email", req:true},
+  {e:"128135922", label:"גיל", type:"text", req:true},
+  {e:"710825264", label:"מצב משפחתי", type:"text", req:true},
+  {e:"794261632", label:"עיר מגורים", type:"text", req:true},
+  {e:"1041373857", label:"מה את עושה היום? (תעסוקה / עיסוק עיקרי)", type:"text", req:true},
+  {e:"670566749", label:"סטטוס תעסוקתי", type:"radio", req:true, opts:["עצמאית - עוסק מורשה / חברה בע״מ","עצמאית - עוסק פטור","שכירה","לא עובדת כרגע"]},
+  {e:"2063992110", label:"קישור לאינסטגרם / פייסבוק", type:"text", req:false},
+
+  {sec:"קצת על הסיפור שלך"},
+  {e:"1616451552", label:"ספרי לי על תקופה, אתגר או חוויה משמעותית שעברת בחיים שלך", type:"para", req:true},
+  {e:"1657428081", label:"יש רעיון לאתגר שעברת בעצמך, או משהו שאנשים כל הזמן מבקשים ממך בו עזרה — שהיית רוצה לעזור בו גם לאחרים?", type:"para", req:true, fromHeart:true, hint:"מילאנו לך כאן את מה שכתבת מהלב — אפשר לערוך"},
+
+  {sec:"מוטיבציה"},
+  {e:"1951634932", label:"כמה חשוב לך עכשיו, ולא \"מתישהו\", לבנות את מקור ההכנסה הנוסף הזה?", type:"scale", req:true},
+  {e:"154760038", label:"מה יקרה אם תוותרי על זה ותמשיכי כרגיל עוד שנה עם ההכנסה והעיסוק הנוכחיים שלך?", type:"para", req:true},
+  {e:"1360907931", label:"מה גרם לך להגיש מועמדות לפיילוט הזה דווקא עכשיו?", type:"para", req:true},
+  {e:"570106402", label:"מה לדעתך הדבר שיכול לעזור לך להשיג את מה שאת רוצה מבחינת הגדלת ההכנסות?", type:"para", req:true},
+
+  {sec:"זמינות והשקעה"},
+  {e:"2146181222", label:"התכנית כוללת מפגש ערב בזום אחת לשבוע, למשך 10 שבועות. יש לך זמינות?", type:"radio", req:true, opts:["כן","צריכה לבדוק","יכולה רק בערב","יכולה רק בבוקר","לא פנויה באופן קבוע בכלל"]},
+  {e:"301183924", label:"מעבר למפגש, נדרשות עוד כשעתיים בשבוע לביצוע מטלות. זה ריאלי בשגרה שלך כרגע?", type:"radio", req:true, opts:["כן","תלוי","לא"]},
+  {e:"877486020", label:"האם זו השקעה שאת רואה את עצמך עושה בתקופה הזו בחייך?", type:"radio", req:true, opts:["כן, אני בעמדה הזו","לא בטוחה","לא כרגע"]},
+
+  {sec:"לפני שנדבר"},
+  {e:"1976111510", label:"יש לך כיוון או תחום ספציפי שאת חושבת שתרצי להתמקד בו כשנבנה את הליווי, הסדנה או המיזם שלך?", type:"para", req:true},
+  {e:"699140220", label:"משהו נוסף שחשוב לך שאדע?", type:"para", req:false, fromGenius:true, hint:"איזור הגאונות שלך מהשאלון כבר נכנס כאן אוטומטית"},
+  {e:"752544577", label:"אני מאשרת קבלת הודעות ודיוור מ׳אמא משקיעה׳ (ניתן להסיר בכל עת)", type:"consent", req:true, consentVal:"מאשר/ת"},
+];
+
+/* ===== state ===== */
+const TOTAL = QUESTIONS.length + 1; // +1 open-heart
+let step = 0; // 0..QUESTIONS.length (last = heart)
+const answers = new Array(QUESTIONS.length).fill(null);
+let heartText = "";
+let genius = {primary:null, blend:null, label:""};
+const scores = {A:0,T:0,M:0,E:0};
+
+const $ = id => document.getElementById(id);
+const screens = ["intro","quiz","result","pilot","thanks"].reduce((o,n)=>(o[n]=$(n),o),{});
+function show(n){Object.values(screens).forEach(s=>s.classList.remove("active"));screens[n].classList.add("active");window.scrollTo({top:0,behavior:"smooth"});}
+$("qTotal").textContent = TOTAL;
+
+function renderStep(){
+  $("qNow").textContent = step+1;
+  $("progFill").style.width = (step/TOTAL*100)+"%";
+  $("backBtn").disabled = step===0;
+  const body = $("quizBody");
+  if(step < QUESTIONS.length){
+    const item = QUESTIONS[step];
+    let html = `<h2 class="q-text">${item.q}</h2><div class="options">`;
+    item.o.forEach(([k,l])=>{ const sel = answers[step]===k ? " sel":""; html+=`<button class="opt${sel}" type="button" data-k="${k}"><span class="dot"></span><span>${l}</span></button>`; });
+    html += `</div>`;
+    body.innerHTML = html;
+    body.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>choose(b.dataset.k)));
+  } else {
+    body.innerHTML = `<h2 class="q-text">עכשיו רגע מהלב 💛</h2>
+      <p style="margin-bottom:20px;color:var(--ink-soft);font-size:1.1rem">מה החלום, הרעיון או הדבר שהכי בא לך להפוך למקור הכנסה? כתבי מה שעולה — בלי לחשוב יותר מדי. (זה גם ייכנס אוטומטית לטופס בהמשך)</p>
+      <textarea id="heartInput" placeholder="כותבת מהלב...">${heartText.replace(/"/g,'&quot;')}</textarea>
+      <button class="btn" id="heartNext" style="margin-top:22px">לגלות את האבחון שלי ✨</button>`;
+    const ta = $("heartInput");
+    ta.addEventListener("input",()=>{heartText = ta.value;});
+    $("heartNext").addEventListener("click",()=>{ heartText = ta.value.trim(); finish(); });
+    ta.focus();
+  }
+}
+function choose(k){ answers[step]=k; step++; renderStep(); }
+
+function finish(){
+  scores.A=scores.T=scores.M=scores.E=0;
+  answers.forEach(a=>{ if(a) scores[a]++; });
+  let best=ORDER[0]; ORDER.forEach(k=>{ if(scores[k]>scores[best]) best=k; });
+  let second=null; ORDER.forEach(k=>{ if(k!==best && (second===null||scores[k]>scores[second])) second=k; });
+  const isBlend = second!==null && (scores[best]-scores[second])<=1 && scores[second]>0;
+  genius.primary=best; genius.blend=isBlend?second:null;
+  genius.label = isBlend ? `${ARCH[best].name} · ${ARCH[second].name}` : ARCH[best].name;
+  renderResult(best,second,isBlend);
+  $("progFill").style.width="100%";
+  show("result");
+}
+
+function renderResult(best,second,isBlend){
+  const a=ARCH[best];
+  $("rEmoji").textContent = isBlend ? a.emoji+ARCH[second].emoji : a.emoji;
+  $("rName").textContent = isBlend ? `את ${ARCH[best].name} · ${ARCH[second].name}` : `את ${a.name}`;
+  $("rEssence").textContent=a.essence;
+  if(isBlend){
+    const key = ORDER.filter(k=>k===best||k===second).length===2
+      ? [best,second].sort().join("") : null;
+    const bk = [best,second].sort().join("");
+    $("blendBlock").style.display="block";
+    $("rBlend").textContent = BLEND[bk] || "יש בך שילוב של שני צבעים חזקים — וזה בדיוק מה שהופך אותך לאחת ויחידה.";
+  } else { $("blendBlock").style.display="none"; }
+  $("rGift").textContent=a.gift;
+  $("rZone").textContent=a.zone;
+  const ul=$("rStreams"); ul.innerHTML="";
+  a.streams.forEach(s=>{const li=document.createElement("li");li.textContent=s;ul.appendChild(li);});
+}
+
+/* ===== render application form ===== */
+function renderForm(){
+  const box=$("formFields"); box.innerHTML="";
+  FORM_FIELDS.forEach((f)=>{
+    if(f.sec){ const d=document.createElement("div"); d.className="fsec"; d.innerHTML=`<div class="fsec-title">${f.sec}</div>`; box.appendChild(d); return; }
+    const wrap=document.createElement("div"); wrap.className="field"; wrap.dataset.entry=f.e; wrap.dataset.req=f.req?"1":"";
+    const reqStar = f.req?' <span class="req">*</span>':'';
+    const hint = f.hint?` <span class="hint">— ${f.hint}</span>`:'';
+    let control="";
+    if(f.type==="para"){
+      let val=""; if(f.fromHeart) val=heartText;
+      control=`<textarea data-e="${f.e}">${val.replace(/</g,'&lt;')}</textarea>`;
+    } else if(f.type==="radio"){
+      control=`<div class="radios" data-e="${f.e}">`+f.opts.map(o=>`<label class="radio-opt"><input type="radio" name="r_${f.e}" value="${o}"><span>${o}</span></label>`).join("")+`</div>`;
+    } else if(f.type==="scale"){
+      control=`<div class="scale" data-e="${f.e}">`+Array.from({length:10},(_,i)=>`<button type="button" data-v="${i+1}">${i+1}</button>`).join("")+`</div>`;
+    } else if(f.type==="consent"){
+      control=`<label class="consent"><input type="checkbox" data-e="${f.e}" data-val="${f.consentVal}"><span>${f.label}${reqStar}</span></label>`;
+      wrap.innerHTML=control+`<div class="err">צריך לאשר כדי שנוכל לחזור אלייך.</div>`;
+      box.appendChild(wrap); wireField(wrap); return;
+    } else {
+      const auto = f.type==="email"?'inputmode="email"':f.type==="tel"?'inputmode="tel"':'';
+      control=`<input type="text" ${auto} data-e="${f.e}">`;
+    }
+    let genNote="";
+    if(f.fromGenius) genNote=`<div class="autochip">🧭 איזור הגאונות שלך: <span class="v" id="geniusChip"></span></div>`;
+    wrap.innerHTML=`<label>${f.label}${reqStar}${hint}</label>${genNote}${control}<div class="err">שדה חובה — נשמח שתמלאי 💛</div>`;
+    box.appendChild(wrap); wireField(wrap);
+  });
+  const chip=$("geniusChip"); if(chip) chip.textContent=genius.label;
+}
+function wireField(wrap){
+  wrap.querySelectorAll(".radio-opt").forEach(l=>l.addEventListener("click",()=>{
+    wrap.querySelectorAll(".radio-opt").forEach(x=>x.classList.remove("sel")); l.classList.add("sel");
+    wrap.querySelector(".err").classList.remove("show");
+  }));
+  wrap.querySelectorAll(".scale button").forEach(b=>b.addEventListener("click",()=>{
+    wrap.querySelectorAll(".scale button").forEach(x=>x.classList.remove("sel")); b.classList.add("sel");
+    wrap.dataset.val=b.dataset.v; wrap.querySelector(".err").classList.remove("show");
+  }));
+  wrap.querySelectorAll("input,textarea").forEach(el=>el.addEventListener("input",()=>{const e=wrap.querySelector(".err");if(e)e.classList.remove("show");}));
+}
+
+function collectAndValidate(){
+  const data={}; let ok=true; let firstBad=null;
+  FORM_FIELDS.forEach(f=>{
+    if(f.sec) return;
+    const wrap=$("formFields").querySelector(`.field[data-entry="${f.e}"]`);
+    let val="";
+    if(f.type==="para"){ val=wrap.querySelector("textarea").value.trim(); }
+    else if(f.type==="radio"){ const c=wrap.querySelector(`input[name="r_${f.e}"]:checked`); val=c?c.value:""; }
+    else if(f.type==="scale"){ val=wrap.dataset.val||""; }
+    else if(f.type==="consent"){ const c=wrap.querySelector("input[type=checkbox]"); val=c.checked?c.dataset.val:""; }
+    else { val=wrap.querySelector("input").value.trim(); }
+    // auto-inject genius into the "משהו נוסף" field
+    if(f.fromGenius){ const g=`איזור הגאונות שלי (מהשאלון): ${genius.label}`; val = val? (g+"\n"+val) : g; }
+    if(f.req && !val){ ok=false; const e=wrap.querySelector(".err"); if(e)e.classList.add("show"); if(!firstBad)firstBad=wrap; }
+    if(val) data["entry."+f.e]=val;
+  });
+  return {data,ok,firstBad};
+}
+
+$("applyForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const {data,ok,firstBad}=collectAndValidate();
+  if(!ok){ $("formErr").classList.add("show"); if(firstBad) firstBad.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  $("formErr").classList.remove("show");
+  const btn=$("submitBtn"); btn.disabled=true; btn.textContent="שולחת...";
+  const body=new URLSearchParams(); Object.entries(data).forEach(([k,v])=>body.append(k,v));
+  fetch(FORM_ACTION,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body.toString()})
+    .then(()=>show("thanks")).catch(()=>show("thanks"));
+});
+
+/* ===== nav ===== */
+$("startBtn").addEventListener("click",()=>{step=0;renderStep();show("quiz");});
+$("backBtn").addEventListener("click",()=>{if(step>0){step--;renderStep();}});
+$("toPilot").addEventListener("click",()=>{renderForm();show("pilot");});
+$("restartBtn").addEventListener("click",()=>{step=0;answers.fill(null);heartText="";show("intro");});
+$("restartBtn2").addEventListener("click",()=>show("result"));
+</script>
+</body>
+</html>
